@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Validation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex w-screen place-content-center">
+
+    <form action=""
+        class="flex flex-col bg-gray-500 py-5 gap-5 border-solid border-red-500 border-2 w-full items-center shadow-lg">
+        <label for="FName"> First Name </label>
+        <input class="inputField border-2" type="text" name="FName" id="first-name" placeholder="First Name">
+        <p id="FNameError" class="text-red-600 font-semibold hidden"> Error: Enter a first name with 3 or more
+            characters. </p>
+        <input class="inputField border-2" type="text" name="LName" id="last-name" placeholder="Last Name">
+        <p id="LNameError" class="text-red-600 font-semibold hidden"> Error: Enter a last name with 1 or more
+            characters. </p>
+        <input class="inputField border-2" type="email" name="email" id="email" placeholder="Email">
+        <p id="EmailError" class="text-red-600 font-semibold hidden"> Error: Enter a valid email. </p>
+        <input class="inputField border-2" type="number" name="mobile" id="mobileInput" placeholder="Mobile Number">
+        <p id="MobileError" class="text-red-600 font-semibold hidden"> Error: Enter a valid mobile number. </p>
+        <input class="inputField border-2" type="password" name="password" id="password_input" placeholder="Password">
+        <button type="button" onclick="handleSubmit()" class="border-2 px-3 py-1 bg-blue-500 text-white" id="submit">
+            Submit </button>
+    </form>
+
+</body>
+
+</html>
+
+<script>
+
+    function handleSubmit() {
+
+        let allInputsValid = false;
+
+        // Validate all inputs
+        if (validateFirstName()) {
+            allInputsValid = true;
+        } else {
+            allInputsValid = false;
+        }
+
+        if (validateLastName()) {
+            allInputsValid = true;
+        } else {
+            allInputsValid = false;
+        }
+
+        if (validateEmailInput()) {
+            allInputsValid = true;
+        } else {
+            allInputsValid = false;
+        }
+
+        if (validateMobile()) {
+            allInputsValid = true;
+        } else {
+            allInputsValid = false;
+        }
+
+        // If all inputs are valid, submit
+        if (allInputsValid) {
+            submitToBackend();
+        }
+    }
+
+    function validateFirstName() {
+        let firstNameInputElement = document.getElementById('first-name');
+
+        if (!firstNameInputElement.value) {
+            document.getElementById('FNameError').classList.remove('hidden');
+            return false;
+        }
+
+        if (firstNameInputElement.value.length < 3) {
+            document.getElementById('FNameError').classList.remove('hidden');
+            return false;
+        }
+
+        document.getElementById('FNameError').classList.add('hidden');
+        return true;
+    }
+
+    function validateLastName() {
+        let lastNameInputElement = document.getElementById('last-name');
+
+        if (!lastNameInputElement.value) {
+            document.getElementById('LNameError').classList.remove('hidden');
+            return false;
+        }
+
+        if (lastNameInputElement.value.length < 3) {
+            document.getElementById('LNameError').classList.remove('hidden');
+            return false;
+        }
+
+        document.getElementById('LNameError').classList.add('hidden');
+        return true;
+    }
+
+    function validateEmailInput() {
+        let emailInputElement = document.getElementById('email');
+
+        if(!emailInputElement.value) {
+            document.getElementById('EmailError').classList.remove('hidden');
+            return false;
+        }
+
+        let matchingStrings = emailInputElement.value.match(/[a-zA-Z._\d]+@[a-zA-Z]+\.[a-zA-Z]/)
+
+        if(!matchingStrings) {
+            document.getElementById('EmailError').classList.remove('hidden');
+            return false;
+        }
+
+        if(matchingStrings.length !== 1) {
+            document.getElementById('EmailError').classList.remove('hidden');
+            return false;
+        }
+
+        document.getElementById('EmailError').classList.add('hidden');
+        return true;
+    }
+
+    function validateMobile() {
+        let lastNameInputElement = document.getElementById('mobileInput');
+
+        if (!lastNameInputElement.value) {
+            document.getElementById('MobileError').classList.remove('hidden');
+            return false;
+        }
+
+        if (lastNameInputElement.value.length !== 8) {
+            document.getElementById('MobileError').classList.remove('hidden');
+            return false;
+        }
+
+        document.getElementById('MobileError').classList.add('hidden');
+        return true;
+    }
+
+    function submitToBackend() {
+        // Does nothing for now
+        console.log('Success');
+    }
+
+</script>
