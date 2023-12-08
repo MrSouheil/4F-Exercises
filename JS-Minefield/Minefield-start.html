@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      .boxes-container {
+        width: 600px;
+      }
+
+      .box {
+        width: 50px;
+        height: 50px;
+        background-color: grey;
+        border: 1px solid rgb(212, 212, 212);
+      }
+      .water-box {
+        background-color: aqua;
+      }
+
+      .start-box {
+        background-color: red;
+      }
+      .end-box {
+        background-color: green;
+      }
+    </style>
+    <title>MineField!</title>
+  </head>
+  <body>
+    <div class="game-container flex flex-col justify-center items-center">
+      <h1 class="game-message">Message</h1>
+      <div class="boxes-container flex flex-wrap"></div>
+    </div>
+    <script>
+      let N = 12; // Changed to a 12x12 grid
+      let startIndex = 2;
+      let endIndex = 144;
+      let waterBoxes = generateRandomPath(N);
+      let boxesContainer = document.querySelector('.boxes-container');
+
+      generateInActiveGameBoard();
+
+      function generateActiveGameBoard() {
+        boxesContainer.innerHTML = '';
+        for (i = 1; i <= N * N; i++) {
+          // generate a box
+          let boxHTML = generateBoxHTML(i);
+          // append it to boxes container
+          boxesContainer.innerHTML += boxHTML;
+        }
+
+        document.querySelectorAll('.box').forEach(function (boxElement) {
+          boxElement.addEventListener('mouseover', function () {
+            if (!waterBoxes.includes(parseInt(boxElement.dataset.index))) {
+              userLost();
+            }
+          });
+        });
+
+        document.querySelector('.end-box').addEventListener('mouseover', function () {
+          updateGameMessage('You won!');
+        });
+
+        document.querySelector('.boxes-container').addEventListener('mouseleave', userLost);
+      }
+
+      function userLost() {
+        // show you lose message
+        updateGameMessage('You lost! Try again.');
+        // reset board
+        generateInActiveGameBoard();
+      }
+
+      function generateInActiveGameBoard() {
+        boxesContainer.innerHTML = '';
+        for (i = 1; i <= N * N; i++) {
+          // generate a box
+          let boxHTML = generateInActiveBox(i);
+          // append it to boxes container
+          boxesContainer.innerHTML += boxHTML;
+        }
+        document.querySelector('.start-box').addEventListener('click', startGame);
+      }
+
+      function startGame() {
+        updateGameMessage('Game started, avoid the gray boxes!');
+        generateActiveGameBoard();
+      }
+
+      function updateGameMessage(message) {
+        document.querySelector('.game-message').innerHTML = message;
+      }
+
+      function generateBoxHTML(i) {
+        let isWater = waterBoxes.includes(i);
+        return `
+        <p data-index=${i} class="box ${i == startIndex ? 'start-box' : ''} ${i == endIndex ? 'end-box' : ''} ${isWater ? 'water-box' : ''}">${i}</p>
+        `;
+      }
+
+      function generateInActiveBox(i) {
+        return `
+        <p class="box ${i == startIndex ? 'start-box' : ''}">${i}</p>
+        `;
+      }
+
+      function generateRandomPath(N) {
+        let path = [];
+        let currentIndex = startIndex;
+        path.push(currentIndex);
+
+        while (currentIndex !== endIndex) {
+          let possibleMoves = getPossibleMoves(currentIndex, N);
+          let nextMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+
+          if (!path.includes(nextMove)) {
+            path.push(nextMove);
+            currentIndex = nextMove;
+          }
+        }
+
+        return path;
+      }
+
+      function getPossibleMoves(index, N) {
+        let row = Math.floor((index - 1) / N) + 1;
+        let col = (index - 1) % N + 1;
+
+        let possibleMoves = [];
+
+        if (row > 1) possibleMoves.push(index - N);
+        if (row < N) possibleMoves.push(index + N);
+        if (col > 1) possibleMoves.push(index - 1);
+        if (col < N) possibleMoves.push(index + 1);
+
+        return possibleMoves;
+      }
+    </script>
+  </body>
+</html>

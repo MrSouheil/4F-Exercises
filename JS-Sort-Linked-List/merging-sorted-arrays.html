@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    let arr1 = [1, 2, 3, 4, 15, 32];
+    let arr2 = [3, 4, 6, 7, 32, 45, 56, 66, 67, 78, 99];
+
+    function mergeSortedArrays(array1, array2) {
+      // merge two arrays keeping them sorted
+      // return [...array1, ...array2].sort(function(a,b){
+      //     return a-b
+      // })
+      let newSortedArray = [];
+    }
+
+    function mergeSortedArrays(arr1, arr2) {
+      let result = [];
+      let pointer1 = 0;
+      let pointer2 = 0;
+
+      while (pointer1 < arr1.length && pointer2 < arr2.length) {
+        if (arr1[pointer1] < arr2[pointer2]) {
+          result.push(arr1[pointer1]);
+          pointer1++;
+        } else {
+          result.push(arr2[pointer2]);
+          pointer2++;
+        }
+      }
+
+      // If there are remaining elements in arr1, add them to the result
+      while (pointer1 < arr1.length) {
+        result.push(arr1[pointer1]);
+        pointer1++;
+      }
+
+      // If there are remaining elements in arr2, add them to the result
+      while (pointer2 < arr2.length) {
+        result.push(arr2[pointer2]);
+        pointer2++;
+      }
+
+      return result;
+    }
+    
+    const mergedArray = mergeSortedArrays(arr1, arr2);
+    console.log(mergedArray);
+
+
+    // console.log(mergeSortedArrays(arr1, arr2));
+  </script>
+</body>
+
+</html>
